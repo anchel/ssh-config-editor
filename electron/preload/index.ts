@@ -95,7 +95,14 @@ setTimeout(removeLoading, 4999)
 
 contextBridge.exposeInMainWorld('electronAPI', {
   ping: (msg) => {
-    console.log('ping', msg);
     return ipcRenderer.invoke('ping', msg);
+  },
+
+  getPath: () => {
+    return ipcRenderer.invoke('get-path');
+  },
+
+  getList: () => {
+    return ipcRenderer.invoke('get-list');
   },
 });
