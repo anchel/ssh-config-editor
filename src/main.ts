@@ -1,5 +1,8 @@
 import { createApp } from 'vue'
+import Antd from 'ant-design-vue';
 import App from './App.vue'
+
+import 'ant-design-vue/dist/antd.css';
 
 /**
  * If you enables use of Node.js API in the Renderer-process
@@ -11,6 +14,7 @@ import App from './App.vue'
 // import './samples/node-api'
 
 createApp(App)
+  .use(Antd)
   .mount('#app')
   .$nextTick(() => {
     postMessage({ payload: 'removeLoading' }, '*')

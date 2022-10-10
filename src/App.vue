@@ -1,68 +1,68 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div class="logo-box">
-    <img class="logo vite" src="./assets/vite.svg" >
-    <img class="logo electron" src="./assets/electron.svg" >
-    <img class="logo vue" src="./assets/vue.svg" >
+  <div class="header">
+    <a-space>
+      <a-button type="primary" shape="circle" @click="handleClick">
+        <template #icon><reload-outlined /></template>
+      </a-button>
+      <a-button type="primary" shape="circle">
+        <template #icon><plus-outlined /></template>
+      </a-button>
+    </a-space>
+    <div style="margin-top: 10px">
+      <a-tag color="purple">purple</a-tag>
+    </div>
   </div>
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
-  <div class="static-public">
-    Place static files into the <code>/public</code> folder
-    <img style="width:77px;" :src="'./node.png'" >
+  <div class="list">
+    <a-collapse v-model:activeKey="activeKey" :bordered="false">
+      <a-collapse-panel v-for="item in list" :key="item" :header="text">
+        <p>{{ text }}</p>
+      </a-collapse-panel>
+    </a-collapse>
   </div>
 </template>
 
+<script setup lang="ts">
+// This starter template is using Vue 3 <script setup> SFCs
+// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
+
+import { ref } from 'vue';
+import { ReloadOutlined, PlusOutlined } from '@ant-design/icons-vue';
+
+const list = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+
+const activeKey = ref([]);
+const text = ref('106.14.20.135');
+
+const handleClick = async () => {
+  const ret = await window.electronAPI.ping('anchel');
+  console.log('handleClick', ret);
+  text.value = ret;
+};
+</script>
+
 <style>
+html, body {
+  height: 100%;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-.logo-box {
+  padding: 10px;
+  height: 100%;
   display: flex;
-  width: 100%;
-  justify-content: center;
+  flex-direction: column;
 }
+</style>
 
-.static-public {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+<style scoped lang="less">
+.header {
+
 }
-
-.static-public code {
-  background-color: #eee;
-  padding: 2px 4px;
-  margin: 0 4px;
-  border-radius: 4px;
-  color: #304455;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: 0.75s;
-}
-
-.logo.vite:hover {
-  filter: drop-shadow(0 0 2em #747bff);
-}
-
-.logo.electron:hover {
-  filter: drop-shadow(0 0 2em #9FEAF9);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #249b73);
+.list {
+  margin-top: 10px;
+  padding-bottom: 80px;
+  flex: 1;
+  overflow: auto;
 }
 </style>

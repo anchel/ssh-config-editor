@@ -3,6 +3,9 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import electron from 'vite-electron-plugin'
 import { customStart } from 'vite-electron-plugin/plugin'
+import Components from "unplugin-vue-components/vite";
+import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
+
 import pkg from './package.json'
 
 rmSync('dist-electron', { recursive: true, force: true })
@@ -10,6 +13,10 @@ rmSync('dist-electron', { recursive: true, force: true })
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    // Components({
+    //   dts: true,
+    //   resolvers: [AntDesignVueResolver()],
+    // }),
     vue(),
     electron({
       include: ['electron'],
