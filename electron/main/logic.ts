@@ -104,7 +104,7 @@ export function init(ipcMain) {
     for await (const entry of readdirp(basePath, { fileFilter: '*id_rsa*' })) {
       const p = entry.path;
       // console.log(`${JSON.stringify({path})}`);
-      list.push(path.join('~/.ssh', p));
+      list.push(path.join('~/.ssh', p).replace(/\\/g, '/'));
     }
     return list.filter(item => item.indexOf('.pub') === -1 && item.indexOf(keyword) !== -1).map(item => ({ value: item })).slice(0, 20);
   });
