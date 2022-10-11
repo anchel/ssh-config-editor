@@ -1,8 +1,8 @@
 {
   "name": "ssh-config-editor",
-  "version": "2.1.0",
+  "version": "1.0.0",
   "main": "dist-electron/main/index.js",
-  "description": "Really simple Electron + Vue + Vite boilerplate.",
+  "description": "SSH Config Editor",
   "author": "anchel",
   "license": "MIT",
   "private": true,

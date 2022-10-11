@@ -88,9 +88,9 @@ import { oneDark } from '@codemirror/theme-one-dark'
 
 const activeKey = ref([]);
 
-const list = ref([]);
+const list = ref<any[]>([]);
 const getConfigList = async () => {
-  const ret = await window.electronAPI.getList();
+  const ret = await (window as any).electronAPI.getList();
   console.log('ret', ret);
   list.value = ret;
 };
@@ -107,7 +107,7 @@ const onSearch = async (value: any) => {
     idx = value.lastIndexOf('\\');
   }
   const keyword = value.substring(idx + 1);
-  optionsIF.value = await window.electronAPI.searchIF(keyword);
+  optionsIF.value = await (window as any).electronAPI.searchIF(keyword);
 };
 
 onMounted(async () => {
@@ -116,7 +116,7 @@ onMounted(async () => {
 
 const filePath = ref('');
 onMounted(async () => {
-  filePath.value = await window.electronAPI.getPath();
+  filePath.value = await (window as any).electronAPI.getPath();
 })
 
 const handleClick = async () => {
@@ -129,7 +129,7 @@ const handleClick = async () => {
 };
 
 const stringify = (conf: any) => {
-  return window.electronAPI.stringify(conf);
+  return (window as any).electronAPI.stringify(conf);
 };
 
 const extensions = [oneDark]
@@ -141,7 +141,7 @@ const handleDelete = async (item: any, idx: number) => {
     okText: 'Yes',
     cancelText: 'No',
     onOk: async () => {
-      await window.electronAPI.deleteConfig(toRaw(list.value), toRaw(item), idx);
+      await (window as any).electronAPI.deleteConfig(toRaw(list.value), toRaw(item), idx);
       await getConfigList();
     },
   });
@@ -215,9 +215,9 @@ const handleModalOk = async () => {
   }
 
   if (opType.value === 'edit') {
-    await window.electronAPI.editConfig(toRaw(list.value), rawCurrentItem, currentIdx.value);
+    await (window as any).electronAPI.editConfig(toRaw(list.value), rawCurrentItem, currentIdx.value);
   } else {
-    await window.electronAPI.addConfig(toRaw(list.value), rawCurrentItem, prepend.value);
+    await (window as any).electronAPI.addConfig(toRaw(list.value), rawCurrentItem, prepend.value);
   }
   visible.value = false;
   await getConfigList();

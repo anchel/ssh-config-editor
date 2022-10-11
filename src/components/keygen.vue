@@ -61,7 +61,7 @@ import { Codemirror } from 'vue-codemirror'
 const visible = ref(false);
 const visibleInfo = ref(false);
 
-const rsaInfo = ref({});
+const rsaInfo = ref<any>({});
 
 const handleClick = () => {
   visible.value = true;
@@ -76,7 +76,7 @@ const formState = reactive({
 const onFinish = async (values: any) => {
   console.log('Success:', values);
   try {
-    const ret = await window.electronAPI.sshKeygen(values);
+    const ret = await (window as any).electronAPI.sshKeygen(values);
     console.log('ret', ret);
     message.success('ssh-keygen success');
     rsaInfo.value = ret;
