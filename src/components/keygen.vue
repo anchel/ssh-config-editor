@@ -20,7 +20,7 @@
         >
           <a-input v-model:value="formState.filename">
             <template #prefix>
-              <span>~/</span>
+              <span>~/.ssh/</span>
             </template>
           </a-input>
         </a-form-item>
