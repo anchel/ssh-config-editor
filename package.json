@@ -1,9 +1,9 @@
 {
-  "name": "electron-vue-vite",
+  "name": "ssh-config-editor",
   "version": "2.1.0",
   "main": "dist-electron/main/index.js",
   "description": "Really simple Electron + Vue + Vite boilerplate.",
-  "author": "草鞋没号 <308487730@qq.com>",
+  "author": "anchel",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -40,7 +40,13 @@
   ],
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
+    "@codemirror/theme-one-dark": "^6.1.0",
     "ant-design-vue": "^3.2.13",
-    "ssh-config": "^4.1.6"
+    "codemirror": "^6.0.1",
+    "monaco-editor": "^0.34.0",
+    "readdirp": "^3.6.0",
+    "ssh-config": "^4.1.6",
+    "ssh-keygen-lite": "^1.3.0",
+    "vue-codemirror": "^6.1.1"
   }
 }
