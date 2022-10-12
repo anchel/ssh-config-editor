@@ -45,9 +45,9 @@
       </a-form>
     </a-modal>
 
-    <a-modal v-model:visible="visibleInfo" title="ssh-keygen result" cancel-text="关闭">
+    <a-modal v-model:visible="visibleInfo" title="ssh-keygen result" cancel-text="关闭" @ok="handleModalOk2">
       <Codemirror :extensions="extensions" :modelValue="rsaInfo.key" style="height: 200px;" />
-      <Codemirror :extensions="extensions" :modelValue="rsaInfo.pubKey" />
+      <Codemirror :extensions="extensions" :modelValue="rsaInfo.pubKey" style="height: 60px; margin-top: 20px" />
     </a-modal>
   </div>
 </template>
@@ -76,7 +76,7 @@ const formState = reactive({
 const onFinish = async (values: any) => {
   console.log('Success:', values);
   try {
-    const ret = await (window as any).electronAPI.sshKeygen(values);
+    const ret = await window.electronAPI.sshKeygen(values);
     console.log('ret', ret);
     message.success('ssh-keygen success');
     rsaInfo.value = ret;
@@ -93,7 +93,11 @@ const onFinishFailed = (errorInfo: any) => {
 };
 
 const handleModalOk = () => {
+  visible.value = false;
+};
 
+const handleModalOk2 = () => {
+  visibleInfo.value = false;
 };
 
 const extensions = [oneDark]

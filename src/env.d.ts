@@ -7,8 +7,6 @@ declare module '*.vue' {
   export default component
 }
 
-declare global {
-  interface Window {
-    electronAPI: any;
-  }
+declare interface Window {
+  electronAPI: any;
 }
