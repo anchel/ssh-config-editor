@@ -55,6 +55,8 @@ async function createWindow() {
     },
   })
 
+  console.log('isPackaged', app.isPackaged)
+  
   if (app.isPackaged) {
     win.loadFile(indexHtml)
   } else {
