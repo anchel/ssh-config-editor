@@ -4,6 +4,7 @@ const os = require('os');
 const SSHConfig = require('ssh-config');
 const keygen = require('ssh-keygen-lite');
 const readdirp = require('readdirp');
+const mkdirp = require('mkdirp')
 
 function getPath() {
   return path.join(os.homedir(), '.ssh', 'config');
@@ -20,6 +21,9 @@ function getList() {
 
 function writeFile(str) {
   const p = getPath();
+  if (!fs.existsSync(p)) {
+    mkdirp.sync(path.dirname(p));
+  }
   fs.writeFileSync(p, str);
 }
 

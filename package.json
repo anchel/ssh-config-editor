@@ -49,6 +49,7 @@
     "ant-design-vue": "^3.2.13",
     "codemirror": "^6.0.1",
     "electron-squirrel-startup": "^1.0.0",
+    "mkdirp": "^1.0.4",
     "monaco-editor": "^0.34.0",
     "readdirp": "^3.6.0",
     "ssh-config": "^4.1.6",
