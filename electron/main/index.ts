@@ -41,7 +41,9 @@ const indexHtml = join(process.env.DIST, 'index.html')
 
 async function createWindow() {
   win = new BrowserWindow({
-    title: 'Main window',
+    title: 'ssh config editor',
+    width: 1200,
+    height: 800,
     icon: join(process.env.PUBLIC, 'favicon.ico'),
     webPreferences: {
       preload,
@@ -53,6 +55,8 @@ async function createWindow() {
     },
   })
 
+  console.log('isPackaged', app.isPackaged)
+  
   if (app.isPackaged) {
     win.loadFile(indexHtml)
   } else {

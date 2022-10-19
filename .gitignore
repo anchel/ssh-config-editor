@@ -24,3 +24,5 @@ dist-ssr
 release
 .vscode/.debug.env
 dist-electron
+
+out/

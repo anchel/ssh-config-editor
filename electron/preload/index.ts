@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
+const SSHConfig = require('ssh-config');
 
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise(resolve => {
@@ -104,5 +105,29 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   getList: () => {
     return ipcRenderer.invoke('get-list');
+  },
+
+  stringify: (conf) => {
+    return SSHConfig.stringify(conf);
+  },
+
+  deleteConfig: (list, conf, idx) => {
+    return ipcRenderer.invoke('delete-config', list, conf, idx);
+  },
+
+  addConfig: (list, conf, prepend) => {
+    return ipcRenderer.invoke('add-config', list, conf, prepend);
+  },
+
+  editConfig: (list, conf, idx) => {
+    return ipcRenderer.invoke('edit-config', list, conf, idx);
+  },
+
+  sshKeygen: (options) => {
+    return ipcRenderer.invoke('ssh-keygen', options);
+  },
+
+  searchIF: (options) => {
+    return ipcRenderer.invoke('search-if', options);
   },
 });
