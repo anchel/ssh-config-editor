@@ -55,8 +55,15 @@ jobs:
         run: |
           echo $CERTIFICATE_BASE64 | base64 --decode > build/profilesshconfigeditor.provisionprofile
 
-      # 构建
+      # 构建 arm64 版本
       - run: npm run make:all
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+
+      # 构建 x64 版本
+      - run: npm run make:all:x64
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           APPLE_ID: ${{ secrets.APPLE_ID }}

@@ -13,7 +13,7 @@
     // type: "distribution",
     // hardenedRuntime: true,
     target: ['dmg'],
-    artifactName: 'ssh-config-editor-Mac-${version}-Installer.${ext}',
+    artifactName: 'ssh-config-editor-darwin-${arch}-${version}-Installer.${ext}',
     // category: "public.app-category.developer-tools",
     // minimumSystemVersion: '12.0',
     provisioningProfile: 'build/profilesshconfigeditor.provisionprofile',
@@ -38,7 +38,7 @@
         arch: ['x64'],
       },
     ],
-    artifactName: 'ssh-config-editor-Windows-${version}-Setup.${ext}',
+    artifactName: 'ssh-config-editor-windows-${arch}-${version}-Setup.${ext}',
   },
   nsis: {
     oneClick: false,
@@ -48,6 +48,6 @@
   },
   linux: {
     target: ['AppImage'],
-    artifactName: 'ssh-config-editor-Linux-${version}.${ext}',
+    artifactName: 'ssh-config-editor-linux-${arch}-${version}.${ext}',
   },
 }
