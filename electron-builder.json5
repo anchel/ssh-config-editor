@@ -8,7 +8,6 @@
     output: 'release',
   },
   files: ['dist', 'dist-electron'],
-  publish: null,
   mac: {
     // type: "development",
     // type: "distribution",
