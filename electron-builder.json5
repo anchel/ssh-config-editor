@@ -8,12 +8,13 @@
     output: 'release',
   },
   files: ['dist', 'dist-electron'],
+  publish: null,
   mac: {
     // type: "development",
     // type: "distribution",
     // hardenedRuntime: true,
     target: ['dmg'],
-    artifactName: 'ssh-config-editor-darwin-${arch}-${version}-Installer.${ext}',
+    artifactName: '${name}-darwin-${arch}-${version}-Installer.${ext}',
     // category: "public.app-category.developer-tools",
     // minimumSystemVersion: '12.0',
     provisioningProfile: 'build/profilesshconfigeditor.provisionprofile',
@@ -35,10 +36,10 @@
     target: [
       {
         target: 'nsis',
-        arch: ['x64'],
+//        arch: ['x64'],
       },
     ],
-    artifactName: 'ssh-config-editor-windows-${arch}-${version}-Setup.${ext}',
+    artifactName: '${name}-windows-${arch}-${version}-Setup.${ext}',
   },
   nsis: {
     oneClick: false,
@@ -48,6 +49,6 @@
   },
   linux: {
     target: ['AppImage'],
-    artifactName: 'ssh-config-editor-linux-${arch}-${version}.${ext}',
+    artifactName: '${name}-linux-${arch}-${version}.${ext}',
   },
 }
