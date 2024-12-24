@@ -26,9 +26,20 @@ jobs:
         with:
           node-version: 22
 
+      # 安装依赖
       - run: npm ci
+
+      - name: Retrieve the secret and decode it to a file
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.PROFILE_DATA }}
+        run: |
+          echo $CERTIFICATE_BASE64 | base64 --decode > build/profilesshconfigeditor.provisionprofile
+
       # 构建
       - run: npm run make:all
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
 
 #      - run: tar -czf frontend.tar.gz -C wechat-official-account-admin-fe/dist .
 #        shell: bash
