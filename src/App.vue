@@ -24,14 +24,14 @@
           <Codemirror :extensions="extensions" :modelValue="stringify(toRaw(item.config))" :disabled="true" />
           <a-space style="margin-top: 10px">
             <edit-outlined title="edit" @click="handleEdit(item, idx)" />
-            <delete-outlined title="delete" @click="handleDelete(item, idx)" />
+            <delete-outlined title="delete" @click="handleDelete(item)" />
           </a-space>
         </div>
       </a-collapse-panel>
     </a-collapse>
   </div>
 
-  <a-modal v-model:visible="visible" :title="modalTitle" @ok="handleModalOk">
+  <a-modal v-model:open="visible" :title="modalTitle" @ok="handleModalOk">
     <a-form-item :label="currentItem.param" name="Host">
       <a-input v-model:value="currentItem.value" />
     </a-form-item>
@@ -134,14 +134,14 @@ const stringify = (conf: any) => {
 
 const extensions = [oneDark]
 
-const handleDelete = async (item: any, idx: number) => {
+const handleDelete = async (item: any) => {
   Modal.confirm({
     title: 'Delete Confirm',
     content: 'Are you sure to delete this config?',
     okText: 'Yes',
     cancelText: 'No',
     onOk: async () => {
-      await window.electronAPI.deleteConfig(toRaw(list.value), toRaw(item), idx);
+      await window.electronAPI.deleteConfig(toRaw(item));
       await getConfigList();
     },
   });
@@ -215,9 +215,9 @@ const handleModalOk = async () => {
   }
 
   if (opType.value === 'edit') {
-    await window.electronAPI.editConfig(toRaw(list.value), rawCurrentItem, currentIdx.value);
+    await window.electronAPI.editConfig(rawCurrentItem, currentIdx.value);
   } else {
-    await window.electronAPI.addConfig(toRaw(list.value), rawCurrentItem, prepend.value);
+    await window.electronAPI.addConfig(rawCurrentItem, prepend.value);
   }
   visible.value = false;
   await getConfigList();

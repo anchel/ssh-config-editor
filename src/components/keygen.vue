@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-button type="link" @click="handleClick">ssh-keygen</a-button>
-    <a-modal v-model:visible="visible" title="ssh-keygen" @ok="handleModalOk">
+    <a-modal v-model:open="visible" title="ssh-keygen" @ok="handleModalOk">
       <template #footer>
       </template>
       <a-form
@@ -45,9 +45,13 @@
       </a-form>
     </a-modal>
 
-    <a-modal v-model:visible="visibleInfo" title="ssh-keygen result" cancel-text="关闭" @ok="handleModalOk2">
+    <a-modal v-model:open="visibleInfo" title="ssh-keygen result" cancel-text="关闭" @ok="handleModalOk2">
+      <div>key:</div>
       <Codemirror :extensions="extensions" :modelValue="rsaInfo.key" style="height: 200px;" />
-      <Codemirror :extensions="extensions" :modelValue="rsaInfo.pubKey" style="height: 60px; margin-top: 20px" />
+
+      <div style="margin-top: 20px;">pubKey:</div>
+      <Codemirror :extensions="extensions" :modelValue="rsaInfo.pubKey" style="height: 60px; margin-top: 1px" />
+      <CopyOutlined style="width: 20px; height: 20px; cursor: pointer;" @click="handleCopyPubKey" />
     </a-modal>
   </div>
 </template>
@@ -55,6 +59,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { message } from 'ant-design-vue'
+import {CopyOutlined} from '@ant-design/icons-vue'
 import { oneDark } from "@codemirror/theme-one-dark";
 import { Codemirror } from 'vue-codemirror'
 
@@ -101,5 +106,20 @@ const handleModalOk2 = () => {
 };
 
 const extensions = [oneDark]
+
+const handleCopyPubKey = () => {
+  copyTextToClipboard(rsaInfo.value.pubKey);
+};
+
+const copyTextToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text).then(
+    () => {
+      message.success('复制成功')
+    },
+    (err) => {
+      message.error('复制失败' + err)
+    },
+  )
+}
 
 </script>

@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
-const SSHConfig = require('ssh-config');
+
+import SSHConfig from 'ssh-config';
 
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise(resolve => {
@@ -95,7 +96,7 @@ window.onmessage = ev => {
 setTimeout(removeLoading, 4999)
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  ping: (msg) => {
+  ping: (msg: any) => {
     return ipcRenderer.invoke('ping', msg);
   },
 
@@ -107,27 +108,27 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return ipcRenderer.invoke('get-list');
   },
 
-  stringify: (conf) => {
+  stringify: (conf: any) => {
     return SSHConfig.stringify(conf);
   },
 
-  deleteConfig: (list, conf, idx) => {
-    return ipcRenderer.invoke('delete-config', list, conf, idx);
+  deleteConfig: (conf: any) => {
+    return ipcRenderer.invoke('delete-config', conf);
   },
 
-  addConfig: (list, conf, prepend) => {
-    return ipcRenderer.invoke('add-config', list, conf, prepend);
+  addConfig: (conf: any, prepend: any) => {
+    return ipcRenderer.invoke('add-config', conf, prepend);
   },
 
-  editConfig: (list, conf, idx) => {
-    return ipcRenderer.invoke('edit-config', list, conf, idx);
+  editConfig: (conf: any, idx: number) => {
+    return ipcRenderer.invoke('edit-config', conf, idx);
   },
 
-  sshKeygen: (options) => {
+  sshKeygen: (options: any) => {
     return ipcRenderer.invoke('ssh-keygen', options);
   },
 
-  searchIF: (options) => {
+  searchIF: (options: any) => {
     return ipcRenderer.invoke('search-if', options);
   },
 });

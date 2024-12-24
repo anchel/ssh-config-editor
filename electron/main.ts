@@ -1,14 +1,18 @@
 // The built directory structure
 //
 // ├─┬ dist-electron
-// │ ├─┬ main
-// │ │ └── index.js    > Electron-Main
-// │ └─┬ preload
-// │   └── index.js    > Preload-Scripts
+// │ ├─ main.js        > Electron-Main
+// │ │
+// │ └─ preload.mjs    > Electron-Preload
+// │
 // ├─┬ dist
 // │ └── index.html    > Electron-Renderer
 //
-process.env.DIST_ELECTRON = join(__dirname, '..')
+import path from 'node:path';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+process.env.DIST_ELECTRON = join(__dirname)
 process.env.DIST = join(process.env.DIST_ELECTRON, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : join(process.env.DIST_ELECTRON, '../public')
 
@@ -16,6 +20,7 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import { release } from 'os'
 import { join } from 'path'
 import { init } from './logic'
+import { fileURLToPath } from 'node:url';
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
@@ -35,7 +40,7 @@ if (!app.requestSingleInstanceLock()) {
 
 let win: BrowserWindow | null = null
 // Here, you can also use other preload
-const preload = join(__dirname, '../preload/index.js')
+const preload = join(process.env.DIST_ELECTRON, 'preload.mjs')
 const url = process.env.VITE_DEV_SERVER_URL
 const indexHtml = join(process.env.DIST, 'index.html')
 
@@ -60,7 +65,7 @@ async function createWindow() {
   if (app.isPackaged) {
     win.loadFile(indexHtml)
   } else {
-    win.loadURL(url)
+    win.loadURL(url as string)
     // Open devTool if the app is not packaged
     win.webContents.openDevTools()
   }
@@ -105,7 +110,7 @@ app.on('activate', () => {
 })
 
 // new window example arg: new windows url
-ipcMain.handle('open-win', (event, arg) => {
+ipcMain.handle('open-win', (_, arg) => {
   const childWindow = new BrowserWindow({
     webPreferences: {
       preload,

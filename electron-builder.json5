@@ -1,37 +1,62 @@
-/**
- * @see https://www.electron.build/configuration/configuration
- */
+// @see - https://www.electron.build/configuration/configuration
 {
-  "appId": "YourAppID",
-  "asar": true,
-  "directories": {
-    "output": "release/${version}"
+  $schema: 'https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json',
+  appId: 'com.anchel.app.desktop.sshce',
+  asar: true,
+  productName: 'SSH Config Editor',
+  directories: {
+    output: 'release/${version}',
   },
-  "files": [
-    "dist-electron",
-    "dist"
+  files: [
+    'dist',
+    'dist-electron'
   ],
-  "mac": {
-    "artifactName": "${productName}_${version}.${ext}",
-    "target": [
-      "dmg"
-    ]
-  },
-  "win": {
-    "target": [
-      {
-        "target": "nsis",
-        "arch": [
-          "x64"
-        ]
-      }
+  mac: {
+    // type: "development",
+    // type: "distribution",
+    // hardenedRuntime: true,
+    target: [
+      'dmg',
     ],
-    "artifactName": "${productName}_${version}.${ext}"
+    artifactName: '${productName}-Mac-${version}-Installer.${ext}',
+    // category: "public.app-category.developer-tools",
+    // minimumSystemVersion: '12.0',
+    provisioningProfile: 'build/profilesshconfigeditor.provisionprofile',
+    extendInfo: {
+      // LSMinimumSystemVersion: "12.0.0", // 设置最低支持 macOS 版本，避免提示没有提交intel架构的应用
+      ITSAppUsesNonExemptEncryption: false,
+      // 是否使用加密
+    },
+    notarize: {
+      teamId: '9J3DW26EZ6',
+    },
+    // gatekeeperAssess: true,
   },
-  "nsis": {
-    "oneClick": false,
-    "perMachine": false,
-    "allowToChangeInstallationDirectory": true,
-    "deleteAppDataOnUninstall": false
-  }
+  mas: {
+    entitlements: 'build/entitlements.mas.plist',
+    entitlementsInherit: 'build/entitlements.mas.inherit.plist',
+  },
+  win: {
+    target: [
+      {
+        target: 'nsis',
+        arch: [
+          'x64'
+        ],
+      },
+    ],
+    artifactName: '${productName}-Windows-${version}-Setup.${ext}',
+  },
+  nsis: {
+    oneClick: false,
+    perMachine: false,
+    allowToChangeInstallationDirectory: true,
+    deleteAppDataOnUninstall: false,
+  },
+  linux: {
+    target: [
+      'AppImage'
+    ],
+    artifactName: '${productName}-Linux-${version}.${ext}',
+  },
 }

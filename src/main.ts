@@ -2,7 +2,8 @@ import { createApp } from 'vue'
 import Antd from 'ant-design-vue';
 import App from './App.vue'
 
-import 'ant-design-vue/dist/antd.css';
+// import 'ant-design-vue/dist/antd.css';
+import 'ant-design-vue/dist/reset.css';
 
 /**
  * If you enables use of Node.js API in the Renderer-process
