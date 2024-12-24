@@ -5,19 +5,14 @@
   asar: true,
   productName: 'SSH Config Editor',
   directories: {
-    output: 'release/${version}',
+    output: 'release',
   },
-  files: [
-    'dist',
-    'dist-electron'
-  ],
+  files: ['dist', 'dist-electron'],
   mac: {
     // type: "development",
     // type: "distribution",
     // hardenedRuntime: true,
-    target: [
-      'dmg',
-    ],
+    target: ['dmg'],
     artifactName: '${productName}-Mac-${version}-Installer.${ext}',
     // category: "public.app-category.developer-tools",
     // minimumSystemVersion: '12.0',
@@ -40,9 +35,7 @@
     target: [
       {
         target: 'nsis',
-        arch: [
-          'x64'
-        ],
+        arch: ['x64'],
       },
     ],
     artifactName: '${productName}-Windows-${version}-Setup.${ext}',
@@ -54,9 +47,7 @@
     deleteAppDataOnUninstall: false,
   },
   linux: {
-    target: [
-      'AppImage'
-    ],
+    target: ['AppImage'],
     artifactName: '${productName}-Linux-${version}.${ext}',
   },
 }
