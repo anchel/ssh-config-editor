@@ -21,6 +21,26 @@ jobs:
 #      - name: Install xcode tools
 #        run: xcode-select --install
 
+      # 解码并导入证书
+      - name: Import Certificate
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
+          CERT_PASSWORD: ${{ secrets.CERT_PASSWORD }}
+          APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+        run: |
+          # 创建临时钥匙串
+          security create-keychain -p "$APPLE_KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$APPLE_KEYCHAIN_PASSWORD" build.keychain
+          security set-keychain-settings -lut 21600 build.keychain
+
+          # 导入证书到钥匙串
+          echo "$CERTIFICATE_BASE64" | base64 --decode > certificate.p12
+          security import certificate.p12 -k build.keychain -P "$CERT_PASSWORD" -T /usr/bin/codesign
+
+          # 配置证书权限
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$APPLE_KEYCHAIN_PASSWORD" build.keychain
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
@@ -69,8 +89,10 @@ jobs:
           name: dist
           path: |
             commit_info.txt
-            release/**/*.dmg
-            release/**/*.exe
+            release/**/ssh-config-editor*.dmg
+            release/**/ssh-config-editor*.pkg
+            release/**/ssh-config-editor*.zip
+            release/**/ssh-config-editor*.exe
           retention-days: 1
 
       - name: Output artifact ID
