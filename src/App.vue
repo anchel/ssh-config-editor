@@ -3,10 +3,14 @@
     <div class="oper">
       <a-space>
         <a-button type="primary" shape="circle" title="Reload" @click="handleClick">
-          <template #icon><reload-outlined /></template>
+          <template #icon>
+            <reload-outlined />
+          </template>
         </a-button>
         <a-button type="primary" shape="circle" title="Add Section" @click="handleAdd">
-          <template #icon><plus-outlined /></template>
+          <template #icon>
+            <plus-outlined />
+          </template>
         </a-button>
       </a-space>
       <div>
@@ -47,13 +51,13 @@
             <a-select-option value="Compression">Compression</a-select-option>
           </a-select>
           <a-auto-complete
-              v-if="conf.param === 'IdentityFile'"
-              v-model:value="conf.value"
-              :options="optionsIF"
-              style="width: 300px"
-              placeholder=""
-              @select="onSelect"
-              @search="onSearch"
+            v-if="conf.param === 'IdentityFile'"
+            v-model:value="conf.value"
+            :options="optionsIF"
+            style="width: 300px"
+            placeholder=""
+            @select="onSelect"
+            @search="onSearch"
           />
           <a-input v-else style="width: 300px" v-model:value="conf.value" />
 
@@ -68,7 +72,9 @@
     <div style="margin-top: 10px">
       <a-space>
         <a-button type="primary" shape="circle" @click="handleAddConfigItem(currentItem)">
-          <template #icon><plus-outlined /></template>
+          <template #icon>
+            <plus-outlined />
+          </template>
         </a-button>
       </a-space>
     </div>
@@ -83,15 +89,15 @@ import { ref, unref, toRaw, onMounted, reactive } from 'vue';
 import { Modal } from 'ant-design-vue';
 import { ReloadOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue';
 import Keygen from './components/keygen.vue';
-import { Codemirror } from 'vue-codemirror'
-import { oneDark } from '@codemirror/theme-one-dark'
+import { Codemirror } from 'vue-codemirror';
+import { oneDark } from '@codemirror/theme-one-dark';
 
 const activeKey = ref([]);
 
 const list = ref<any[]>([]);
 const getConfigList = async () => {
   const ret = await window.electronAPI.getList();
-  console.log('ret', ret);
+  console.log('getConfigList', ret);
   list.value = ret;
 };
 
@@ -117,22 +123,23 @@ onMounted(async () => {
 const filePath = ref('');
 onMounted(async () => {
   filePath.value = await window.electronAPI.getPath();
-})
+});
 
 const handleClick = async () => {
-  // const ret = await window.electronAPI.ping('anchel');
-  // console.log('handleClick', ret);
-  // const ret = await window.electronAPI.ping();
-  const rawList = toRaw(list.value);
-  console.log('handleClick', rawList);
-  stringify(rawList);
+  // // const ret = await window.electronAPI.ping('anchel');
+  // // console.log('handleClick', ret);
+  // // const ret = await window.electronAPI.ping();
+  // const rawList = toRaw(list.value);
+  // console.log('handleClick', rawList);
+  // stringify(rawList);
+  await getConfigList();
 };
 
 const stringify = (conf: any) => {
   return window.electronAPI.stringify(conf);
 };
 
-const extensions = [oneDark]
+const extensions = [oneDark];
 
 const handleDelete = async (item: any) => {
   Modal.confirm({
@@ -176,7 +183,7 @@ const handleAdd = () => {
         value: '',
         before: '  ',
         after: '\n',
-      }
+      },
     ],
   };
   visible.value = true;
@@ -204,7 +211,9 @@ const handleModalOk = async () => {
   const rawCurrentItem = toRaw(currentItem.value);
   console.log('rawCurrentItem', rawCurrentItem);
   if (opType.value === 'add') {
-    const findItem = list.value.find((line: any) => line.param === rawCurrentItem.param && line.value === rawCurrentItem.value);
+    const findItem = list.value.find(
+      (line: any) => line.param === rawCurrentItem.param && line.value === rawCurrentItem.value,
+    );
     if (findItem) {
       Modal.warning({
         title: 'Warning',
@@ -225,9 +234,11 @@ const handleModalOk = async () => {
 </script>
 
 <style>
-html, body {
+html,
+body {
   height: 100%;
 }
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -246,6 +257,7 @@ html, body {
     justify-content: space-between;
   }
 }
+
 .list {
   margin-top: 10px;
   padding-bottom: 80px;

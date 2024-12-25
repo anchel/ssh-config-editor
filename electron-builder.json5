@@ -7,12 +7,15 @@
   directories: {
     output: 'release',
   },
-  files: ['dist', 'dist-electron'],
+  files: [
+    'dist',
+    'dist-electron'
+  ],
   mac: {
     // type: "development",
     // type: "distribution",
     // hardenedRuntime: true,
-    target: ['dmg'],
+    // target: ['dmg'],
     artifactName: '${name}-darwin-${arch}-${version}-Installer.${ext}',
     // category: "public.app-category.developer-tools",
     // minimumSystemVersion: '12.0',
@@ -35,7 +38,7 @@
     target: [
       {
         target: 'nsis',
-//        arch: ['x64'],
+        //        arch: ['x64'],
       },
     ],
     artifactName: '${name}-windows-${arch}-${version}-Setup.${ext}',
@@ -47,7 +50,9 @@
     deleteAppDataOnUninstall: false,
   },
   linux: {
-    target: ['AppImage'],
+    target: [
+      'AppImage'
+    ],
     artifactName: '${name}-linux-${arch}-${version}.${ext}',
   },
 }

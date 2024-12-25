@@ -3,14 +3,18 @@
   "version": "1.0.1",
   "description": "SSH Config Editor",
   "author": "anchel",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anchel/ssh-config-editor.git"
+  },
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "make": "vue-tsc --noEmit && vite build && electron-builder",
-    "make:all": "vue-tsc --noEmit && vite build && electron-builder -mw --arm64 --publish never",
-    "make:all:x64": "vue-tsc --noEmit && vite build && electron-builder -mw --x64 --publish never",
+    "make:all": "vue-tsc --noEmit && vite build && electron-builder -mw --arm64",
+    "make:all:x64": "vue-tsc --noEmit && vite build && electron-builder -mw --x64",
     "preview": "vite preview"
   },
   "devDependencies": {
@@ -37,6 +41,7 @@
     "vue-tsc": "^2.0.26"
   },
   "dependencies": {
+    "electron-updater": "^6.3.9",
     "mkdirp": "^3.0.1",
     "readdirp": "^4.0.2",
     "ssh-config": "^5.0.1",

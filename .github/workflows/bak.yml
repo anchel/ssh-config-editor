@@ -1,0 +1,152 @@
+name: Release on Push Tag
+
+permissions:
+  contents: write
+  actions: write
+
+on:
+  push:
+    tags:
+      - no-used*
+jobs:
+  build:
+    name: Build Production
+    runs-on: macos-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+
+      #      - name: Install xcode tools
+      #        run: xcode-select --install
+
+      # 解码并导入证书
+      - name: Import Certificate
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
+          CERT_PASSWORD: ${{ secrets.CERT_PASSWORD }}
+          APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+        run: |
+          # 创建临时钥匙串
+          security create-keychain -p "$APPLE_KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$APPLE_KEYCHAIN_PASSWORD" build.keychain
+          security set-keychain-settings -lut 21600 build.keychain
+
+          # 导入证书到钥匙串
+          echo "$CERTIFICATE_BASE64" | base64 --decode > certificate.p12
+          security import certificate.p12 -k build.keychain -P "$CERT_PASSWORD" -T /usr/bin/codesign
+
+          # 配置证书权限
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$APPLE_KEYCHAIN_PASSWORD" build.keychain
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 安装依赖
+      - run: npm ci
+
+      - name: Retrieve the secret and decode it to a file
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.PROFILE_DATA }}
+        run: |
+          echo $CERTIFICATE_BASE64 | base64 --decode > build/profilesshconfigeditor.provisionprofile
+
+      # 构建 arm64 版本
+      - run: npm run make:all
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+
+      # 构建 x64 版本
+      - run: npm run make:all:x64
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+
+      #      - run: tar -czf frontend.tar.gz -C wechat-official-account-admin-fe/dist .
+      #        shell: bash
+
+      - name: Get Tag and Commit Info
+        id: get_commit_info
+        run: |
+          # 获取标签名称
+          TAG_NAME="${{ github.ref_name }}"
+
+          # 获取该标签的提交信息
+          COMMIT_INFO=$(git log -1 --pretty=format:"%s" "$TAG_NAME")
+
+          echo "Tag: $TAG_NAME"
+          echo "Commit Info:"
+          echo "$COMMIT_INFO"
+
+          # 将信息写入文件
+          echo "$COMMIT_INFO" > commit_info.txt
+
+      - run: ls -alrth
+
+      - uses: actions/upload-artifact@v4
+        id: upload-dist
+        with:
+          name: dist
+          path: |
+            commit_info.txt
+            release/**/ssh-config-editor*.dmg
+            release/**/ssh-config-editor*.pkg
+            release/**/ssh-config-editor*.zip
+            release/**/ssh-config-editor*.exe
+          retention-days: 1
+
+      - name: Output artifact ID
+        run: echo 'Artifact ID is ${{ steps.upload-dist.outputs.artifact-id }}'
+
+  release:
+    name: Release Production
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+
+      - run: tree .
+
+      - run: ls -alrth
+
+      # - run: tar -czvf all.tar.gz frontend.tar.gz woaa*
+      #   shell: bash
+
+      - name: create_release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: "${{ github.ref_name }}"
+          release_name: "Release ${{ github.ref_name }}"
+          body_path: "commit_info.txt"
+          draft: true
+          prerelease: false
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Upload Release Assets
+        # You may pin to the exact commit or the version.
+        # uses: alexellis/upload-assets@13926a61cdb2cb35f5fdef1c06b8b591523236d3
+        uses: alexellis/upload-assets@0.4.1
+        with:
+          # The paths to the assets you want to upload as a JSON array. You can use a glob pattern.
+          asset_paths: '["release/**/*"]'
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - run: echo 'Release ID is ${{ steps.create_release.outputs.id }}'

@@ -5,6 +5,7 @@ import SSHConfig from 'ssh-config';
 import keygen from 'ssh-keygen-lite';
 import readdirp from 'readdirp';
 import { mkdirp } from 'mkdirp';
+import { getAutoUpdater } from './updater.ts';
 
 function getPath() {
   return path.join(os.homedir(), '.ssh', 'config');
@@ -31,6 +32,11 @@ export function init(ipcMain: any) {
   ipcMain.handle('ping', async () => {
     const config: any = getList();
     return SSHConfig.stringify(config[0]);
+  });
+
+  ipcMain.handle('check-update', () => {
+    const autoUpdater = getAutoUpdater();
+    return autoUpdater.checkForUpdatesAndNotify();
   });
 
   ipcMain.handle('get-path', () => {
