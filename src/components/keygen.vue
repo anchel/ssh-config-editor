@@ -2,21 +2,20 @@
   <div>
     <a-button type="link" @click="handleClick">ssh-keygen</a-button>
     <a-modal v-model:open="visible" title="ssh-keygen" @ok="handleModalOk">
-      <template #footer>
-      </template>
+      <template #footer></template>
       <a-form
-          :model="formState"
-          name="basic"
-          :label-col="{ span: 8 }"
-          :wrapper-col="{ span: 16 }"
-          autocomplete="off"
-          @finish="onFinish"
-          @finishFailed="onFinishFailed"
+        :model="formState"
+        name="basic"
+        :label-col="{ span: 8 }"
+        :wrapper-col="{ span: 16 }"
+        autocomplete="off"
+        @finish="onFinish"
+        @finishFailed="onFinishFailed"
       >
         <a-form-item
-            label="Filename"
-            name="filename"
-            :rules="[{ required: true, message: 'Please input your filename!' }]"
+          label="Filename"
+          name="filename"
+          :rules="[{ required: true, message: 'Please input your filename!' }]"
         >
           <a-input v-model:value="formState.filename">
             <template #prefix>
@@ -25,17 +24,11 @@
           </a-input>
         </a-form-item>
 
-        <a-form-item
-            label="Comment"
-            name="comment"
-        >
+        <a-form-item label="Comment" name="comment">
           <a-input v-model:value="formState.comment" placeholder="xxx@gmail.com" />
         </a-form-item>
 
-        <a-form-item
-            label="Password"
-            name="password"
-        >
+        <a-form-item label="Password" name="password">
           <a-input-password v-model:value="formState.password" />
         </a-form-item>
 
@@ -47,21 +40,21 @@
 
     <a-modal v-model:open="visibleInfo" title="ssh-keygen result" cancel-text="关闭" @ok="handleModalOk2">
       <div>key:</div>
-      <Codemirror :extensions="extensions" :modelValue="rsaInfo.key" style="height: 200px;" />
+      <Codemirror :extensions="extensions" :modelValue="rsaInfo.key" style="height: 200px" />
 
-      <div style="margin-top: 20px;">pubKey:</div>
+      <div style="margin-top: 20px">pubKey:</div>
       <Codemirror :extensions="extensions" :modelValue="rsaInfo.pubKey" style="height: 60px; margin-top: 1px" />
-      <CopyOutlined style="width: 20px; height: 20px; cursor: pointer;" @click="handleCopyPubKey" />
+      <CopyOutlined style="width: 20px; height: 20px; cursor: pointer" @click="handleCopyPubKey" />
     </a-modal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { message } from 'ant-design-vue'
-import {CopyOutlined} from '@ant-design/icons-vue'
-import { oneDark } from "@codemirror/theme-one-dark";
-import { Codemirror } from 'vue-codemirror'
+import { ref, reactive } from 'vue';
+import { message } from 'ant-design-vue';
+import { CopyOutlined } from '@ant-design/icons-vue';
+import { oneDark } from '@codemirror/theme-one-dark';
+import { Codemirror } from 'vue-codemirror';
 
 const visible = ref(false);
 const visibleInfo = ref(false);
@@ -105,7 +98,7 @@ const handleModalOk2 = () => {
   visibleInfo.value = false;
 };
 
-const extensions = [oneDark]
+const extensions = [oneDark];
 
 const handleCopyPubKey = () => {
   copyTextToClipboard(rsaInfo.value.pubKey);
@@ -114,12 +107,11 @@ const handleCopyPubKey = () => {
 const copyTextToClipboard = (text: string) => {
   navigator.clipboard.writeText(text).then(
     () => {
-      message.success('复制成功')
+      message.success('复制成功');
     },
     (err) => {
-      message.error('复制失败' + err)
+      message.error('复制失败' + err);
     },
-  )
-}
-
+  );
+};
 </script>
