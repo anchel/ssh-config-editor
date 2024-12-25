@@ -22,6 +22,7 @@ import { join } from 'path';
 import { init } from './logic';
 import { fileURLToPath } from 'node:url';
 import { createMenu } from './menu.ts';
+import { setMainWindow } from './window-manager.ts';
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration();
@@ -81,6 +82,8 @@ async function createWindow() {
     if (url.startsWith('https:')) shell.openExternal(url);
     return { action: 'deny' };
   });
+
+  setMainWindow(win);
 }
 
 app.whenReady().then(async () => {

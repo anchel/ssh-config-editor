@@ -1,10 +1,12 @@
-import { app, Menu } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import { getAutoUpdater } from './updater.ts';
+import { getMainWindow } from './window-manager.ts';
+import { send } from './sender.ts';
 
 export function createMenu() {
   const isMac = process.platform === 'darwin';
 
-  const template: any = [
+  const template: Array<any> = [
     // { role: 'appMenu' }
     ...(isMac
       ? [
@@ -84,9 +86,19 @@ export function createMenu() {
       submenu: [
         {
           label: 'Check for Updates',
-          click: async () => {
+          click: () => {
             const autoUpdater = getAutoUpdater();
-            await autoUpdater.checkForUpdatesAndNotify();
+            send('show-message', { type: 'info', content: 'Checking for updates...' });
+            autoUpdater.checkForUpdatesAndNotify().then(
+              (ret) => {
+                console.log('checkForUpdatesAndNotify', ret);
+                send('check-update-result', ret);
+              },
+              (e) => {
+                console.error(e);
+                send('check-update-result', { error: e.message });
+              },
+            );
           },
         },
       ],

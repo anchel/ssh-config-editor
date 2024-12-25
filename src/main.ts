@@ -4,6 +4,7 @@ import App from './App.vue';
 
 // import 'ant-design-vue/dist/antd.css';
 import 'ant-design-vue/dist/reset.css';
+import { registerInit } from '@/register.ts';
 
 /**
  * If you enables use of Node.js API in the Renderer-process
@@ -18,4 +19,5 @@ createApp(App)
   .mount('#app')
   .$nextTick(() => {
     postMessage({ payload: 'removeLoading' }, '*');
+    registerInit();
   });

@@ -4,6 +4,13 @@
   appId: 'com.anchel.app.desktop.sshce',
   asar: true,
   productName: 'SSH Config Editor',
+  publish: [
+    {
+      provider: 'generic',
+      url: 'https://download.anchel.cn/app/ssh-config-editor/',
+      channel: 'latest',
+    },
+  ],
   directories: {
     output: 'release',
   },
