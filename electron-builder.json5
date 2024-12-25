@@ -10,6 +10,14 @@
       url: 'https://download.anchel.cn/app/ssh-config-editor/',
       channel: 'latest-${arch}',
     },
+    {
+      provider: 'github',
+      //      owner: 'anchel',
+      //      repo: 'ssh-config-editor',
+      // "draft" | "prerelease" | "release"
+      releaseType: 'draft',
+      channel: 'latest-${arch}',
+    },
   ],
   directories: {
     output: 'release',
