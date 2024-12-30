@@ -1,4 +1,4 @@
-name: Release on Push Tag
+name: Release on Push
 
 permissions:
   contents: write
@@ -6,8 +6,8 @@ permissions:
 
 on:
   push:
-    tags:
-      - no-used*
+    branches:
+      - release
 jobs:
   build:
     name: Build Production
@@ -41,6 +41,14 @@ jobs:
           # 配置证书权限
           security set-key-partition-list -S apple-tool:,apple: -s -k "$APPLE_KEYCHAIN_PASSWORD" build.keychain
 
+      - name: Retrieve the secret and decode it to a file
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.PROFILE_DATA }}
+        run: |
+          echo $CERTIFICATE_BASE64 | base64 --decode > build/profilesshconfigeditor.provisionprofile
+
+      - run: ls -alrth
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
@@ -49,11 +57,8 @@ jobs:
       # 安装依赖
       - run: npm ci
 
-      - name: Retrieve the secret and decode it to a file
-        env:
-          CERTIFICATE_BASE64: ${{ secrets.PROFILE_DATA }}
-        run: |
-          echo $CERTIFICATE_BASE64 | base64 --decode > build/profilesshconfigeditor.provisionprofile
+      - name: Prepare Release
+        run: npx semantic-release
 
       # 构建 arm64 版本
       - run: npm run make:all

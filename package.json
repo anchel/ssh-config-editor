@@ -1,6 +1,6 @@
 {
   "name": "ssh-config-editor",
-  "version": "1.0.4",
+  "version": "1.0.2",
   "description": "SSH Config Editor",
   "author": "anchel",
   "repository": {
@@ -21,6 +21,9 @@
     "@ant-design/icons-vue": "^7.0.1",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@element-plus/icons-vue": "^2.3.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.1",
     "@vitejs/plugin-vue": "^5.0.4",
     "ant-design-vue": "^4.2.6",
     "dayjs": "^1.11.13",
@@ -30,6 +33,7 @@
     "less": "^4.2.1",
     "pinia": "^2.3.0",
     "prettier": "^3.4.2",
+    "semantic-release": "^24.2.0",
     "typescript": "^5.2.2",
     "uuid": "^11.0.3",
     "vite": "^5.1.6",
