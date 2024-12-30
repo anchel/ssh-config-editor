@@ -51,7 +51,7 @@ async function createWindow() {
     title: 'ssh config editor',
     width: 1200,
     height: 800,
-    icon: join(process.env.PUBLIC, 'favicon.ico'),
+    // icon: join(process.env.PUBLIC, 'favicon.ico'),
     webPreferences: {
       preload,
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
