@@ -58,6 +58,8 @@ jobs:
       - run: npm ci
 
       - name: Prepare Release
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: npx semantic-release
 
       # 构建 arm64 版本
