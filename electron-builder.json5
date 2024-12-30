@@ -10,14 +10,14 @@
       url: 'https://download.anchel.cn/app/ssh-config-editor/',
       channel: 'latest-${arch}',
     },
-    {
-      provider: 'github',
-      //      owner: 'anchel',
-      //      repo: 'ssh-config-editor',
-      // "draft" | "prerelease" | "release"
-      releaseType: 'draft',
-      channel: 'latest-${arch}',
-    },
+    //    {
+    //      provider: 'github',
+    //      //      owner: 'anchel',
+    //      //      repo: 'ssh-config-editor',
+    //      // "draft" | "prerelease" | "release"
+    //      releaseType: 'draft',
+    //      channel: 'latest-${arch}',
+    //    },
   ],
   directories: {
     output: 'release',
@@ -31,7 +31,7 @@
     // type: "distribution",
     // hardenedRuntime: true,
     // target: ['dmg'],
-    artifactName: '${name}-darwin-${arch}-${version}-Installer.${ext}',
+    artifactName: '${name}-${version}-darwin-${arch}-installer.${ext}',
     // category: "public.app-category.developer-tools",
     // minimumSystemVersion: '12.0',
     provisioningProfile: 'build/profilesshconfigeditor.provisionprofile',
@@ -56,7 +56,7 @@
         //        arch: ['x64'],
       },
     ],
-    artifactName: '${name}-windows-${arch}-${version}-Setup.${ext}',
+    artifactName: '${name}-${version}-windows-${arch}-setup.${ext}',
   },
   nsis: {
     oneClick: false,
@@ -68,6 +68,6 @@
     target: [
       'AppImage'
     ],
-    artifactName: '${name}-linux-${arch}-${version}.${ext}',
+    artifactName: '${name}-${version}-linux-${arch}.${ext}',
   },
 }
