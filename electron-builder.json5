@@ -9,6 +9,7 @@
       provider: 'generic',
       url: 'https://download.anchel.cn/app/ssh-config-editor/',
       channel: 'latest-${arch}',
+      publishAutoUpdate: false,
     },
     //    {
     //      provider: 'github',
