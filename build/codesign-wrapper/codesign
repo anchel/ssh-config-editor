@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -u
+
+real_codesign="${CODESIGN_BINARY:-/usr/bin/codesign}"
+attempt=1
+max_attempts=4
+
+while [ "$attempt" -le "$max_attempts" ]; do
+  output_file="$(mktemp)" || exit 1
+
+  if "$real_codesign" "$@" >"$output_file" 2>&1; then
+    status=0
+  else
+    status=$?
+  fi
+
+  cat "$output_file"
+  if [ "$status" -eq 0 ]; then
+    rm -f "$output_file"
+    exit 0
+  fi
+
+  if ! grep -Fq 'A timestamp was expected but was not found' "$output_file" || [ "$attempt" -eq "$max_attempts" ]; then
+    rm -f "$output_file"
+    exit "$status"
+  fi
+
+  rm -f "$output_file"
+  delay=$((2 ** attempt))
+  printf 'Retrying codesign after transient timestamp failure (%s/%s) in %ss\n' \
+    "$((attempt + 1))" "$max_attempts" "$delay" >&2
+  sleep "$delay"
+  attempt=$((attempt + 1))
+done

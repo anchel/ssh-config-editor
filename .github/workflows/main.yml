@@ -55,6 +55,9 @@ jobs:
       # 安装依赖
       - run: npm ci
 
+      - name: Retry transient Apple code-signing timestamp failures
+        run: echo "$GITHUB_WORKSPACE/build/codesign-wrapper" >> "$GITHUB_PATH"
+
       - name: create_release
         id: create_release
         uses: actions/create-release@v1
