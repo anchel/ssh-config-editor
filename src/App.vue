@@ -42,11 +42,12 @@
     <div class="modal-item-list">
       <div class="item" v-for="(conf, idx) in currentItem.config" :key="idx">
         <a-space v-if="conf.type === 1">
-          <a-select style="width: 120px" v-model:value="conf.param">
+          <a-select style="width: 160px" v-model:value="conf.param">
             <a-select-option value="HostName">HostName</a-select-option>
             <a-select-option value="User">User</a-select-option>
             <a-select-option value="Port">Port</a-select-option>
             <a-select-option value="IdentityFile">IdentityFile</a-select-option>
+            <a-select-option value="ServerAliveInterval">ServerAliveInterval</a-select-option>
             <a-select-option value="LogLevel">LogLevel</a-select-option>
             <a-select-option value="Compression">Compression</a-select-option>
           </a-select>
