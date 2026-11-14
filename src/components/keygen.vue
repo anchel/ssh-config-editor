@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-button type="link" @click="handleClick">ssh-keygen</a-button>
+    <a-button type="link" @click="handleClick">Generate SSH key</a-button>
     <a-modal v-model:open="visible" title="ssh-keygen" @ok="handleModalOk">
       <template #footer></template>
       <a-form
@@ -30,6 +30,10 @@
 
         <a-form-item label="Password" name="password">
           <a-input-password v-model:value="formState.password" />
+        </a-form-item>
+
+        <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+          GitHub recommends Ed25519 keys.
         </a-form-item>
 
         <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
@@ -66,7 +70,7 @@ const handleClick = () => {
 };
 
 const formState = reactive({
-  filename: 'id_rsa_',
+  filename: 'id_ed25519_',
   comment: '',
   password: '',
 });

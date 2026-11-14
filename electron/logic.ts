@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import SSHConfig from 'ssh-config';
-import keygen from 'ssh-keygen-lite';
+import { execFile } from 'node:child_process';
 import readdirp from 'readdirp';
 import { mkdirp } from 'mkdirp';
 import { getAutoUpdater } from './updater.ts';
@@ -11,8 +11,15 @@ function getPath() {
   return path.join(os.homedir(), '.ssh', 'config');
 }
 
-function getList() {
+function ensureConfigFile() {
   const p = getPath();
+  mkdirp.sync(path.dirname(p));
+  fs.closeSync(fs.openSync(p, 'a', 0o600));
+  return p;
+}
+
+function getList() {
+  const p = ensureConfigFile();
   const content = fs.readFileSync(p, 'utf8');
 
   const config = SSHConfig.parse(content);
@@ -21,10 +28,7 @@ function getList() {
 }
 
 function writeFile(str: string) {
-  const p = getPath();
-  if (!fs.existsSync(p)) {
-    mkdirp.sync(path.dirname(p));
-  }
+  const p = ensureConfigFile();
   fs.writeFileSync(p, str);
 }
 
@@ -79,33 +83,31 @@ export function init(ipcMain: any) {
     writeFile(SSHConfig.stringify(config));
   });
 
-  ipcMain.handle('ssh-keygen', (_: any, options: any) => {
+  ipcMain.handle('ssh-keygen', async (_: any, options: any) => {
     const basePath = path.join(os.homedir(), '.ssh');
+    mkdirp.sync(basePath);
     const finalPath = path.resolve(basePath, options.filename);
     console.log('basePath, finalPath', basePath, finalPath);
-    if (fs.existsSync(finalPath)) {
-      return Promise.reject('File already exists');
+    if (fs.existsSync(finalPath) || fs.existsSync(`${finalPath}.pub`)) {
+      throw new Error('File already exists');
     }
-    const params: any = {
-      location: path.join(basePath, options.filename),
-      type: 'rsa',
-      read: true,
-      force: true,
-      destroy: false,
-      comment: options.comment,
-      password: options.password,
-      size: '2048',
-      format: 'PEM',
-    };
-    return new Promise((resolve, reject) => {
-      keygen(params, (err, out) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(out);
-        }
-      });
+    await new Promise<void>((resolve, reject) => {
+      execFile(
+        'ssh-keygen',
+        ['-q', '-t', 'ed25519', '-C', options.comment || '', '-f', finalPath, '-N', options.password || ''],
+        (err: Error | null) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        },
+      );
     });
+    return {
+      key: fs.readFileSync(finalPath, 'utf8'),
+      pubKey: fs.readFileSync(`${finalPath}.pub`, 'utf8'),
+    };
   });
 
   ipcMain.handle('search-if', async (_: any, keyword: string) => {
@@ -114,7 +116,7 @@ export function init(ipcMain: any) {
     const list = [];
     for await (const entry of readdirp(basePath, {
       fileFilter: (e) => {
-        return e.path.includes('id_rsa');
+        return e.path.includes('id_rsa') || e.path.includes('id_ed25519');
       },
     })) {
       const p = entry.path;
